@@ -10,6 +10,7 @@ import SwiftUI
 struct QuizzesListView: View {
     
     @EnvironmentObject var quizzesModel : QuizzesModel
+    @EnvironmentObject var scoresModel: ScoresModel
     
     var body: some View{
         NavigationStack{
@@ -25,7 +26,18 @@ struct QuizzesListView: View {
                     }
                 }
                 .navigationTitle("Quizzes")
-                .onAppear{quizzesModel.load()}
+                .navigationBarItems(
+                                    leading: Text("Record:"), //muestra el mayor número de acertados
+                                    trailing: Button(action: {
+                                        quizzesModel.download()
+                                        scoresModel.delete()
+                                    }) {
+                                        Label("Reload", systemImage: "arrow.counterclockwise.circle")
+                                    }
+                )
+                .onAppear{
+                    quizzesModel.quizzes.count == 0 ? quizzesModel.download() : nil
+                }
             }
         }
     }

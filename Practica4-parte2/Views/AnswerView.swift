@@ -13,6 +13,8 @@ struct AnswerView: View {
     var quizItem:QuizItem
     
     @EnvironmentObject var scoresModel: ScoresModel
+    @EnvironmentObject var quizzesModel : QuizzesModel
+
     @State var answer: String = ""
     @State var showAlert = false
     
@@ -36,10 +38,14 @@ struct AnswerView: View {
                     .font(.system(size: 20, weight: .bold))
                 
                 //Boton de favoritos
-                Image(quizItem.favourite ? "star_yellow" : "star_grey")
-                    .resizable()
-                    .frame(width: 25, height: 25)
-                    .scaledToFit()
+                Button(action: {
+                    quizzesModel.favourites(quizItem)
+                }){
+                    Image(quizItem.favourite ? "star_yellow" : "star_grey")
+                        .resizable()
+                        .frame(width: 25, height: 25)
+                        .scaledToFit()
+                }
             }
             
             TextField("Respuesta",
@@ -152,19 +158,21 @@ struct AnswerView: View {
                         .font(.system(size: 20, weight: .bold))
                     
                     //Boton de favoritos
-                    Image(quizItem.favourite ? "star_yellow" : "star_grey")
-                        .resizable()
-                        .frame(width: 25, height: 25)
-                        .scaledToFit()
+                    Button(action: {
+                        quizzesModel.favourites(quizItem)
+                    }){
+                        Image(quizItem.favourite ? "star_yellow" : "star_grey")
+                            .resizable()
+                            .frame(width: 25, height: 25)
+                            .scaledToFit()
+                    }
                 }
                 
                 TextField("Respuesta",
                           text: $answer,
                           onCommit: {
                     showAlert = true
-                }
-                          
-                )
+                })
                 .padding(40)
                 .overlay (RoundedRectangle (cornerRadius: 20).stroke(lineWidth: 1))
                 .padding(30)
