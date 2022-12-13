@@ -9,42 +9,86 @@ import SwiftUI
 
 struct QuizzesListView: View {
     
-    @EnvironmentObject var quizzesModel : QuizzesModel
+    @EnvironmentObject var quizzesModel: QuizzesModel
     @EnvironmentObject var scoresModel: ScoresModel
+    private var kmykey = "MY_KEY"
+    @State var toggleAcertadas = false
     
     var body: some View{
         NavigationStack{
             VStack{
-                List{
-                    ForEach(quizzesModel.quizzes){ qi in
-                        NavigationLink(
-                            destination: AnswerView(quizItem: qi)
-                        ){
-                            QuizView(quizItem: qi)
-                        }
-                            
-                    }
-                }
-                .navigationTitle("Quizzes")
-                .navigationBarItems(
-                                    leading: Text("Record:"), //muestra el mayor número de acertados
-                                    trailing: Button(action: {
-                                        quizzesModel.download()
-                                        scoresModel.delete()
-                                    }) {
-                                        Label("Reload", systemImage: "arrow.counterclockwise.circle")
-                                    }
-                )
-                .onAppear{
-                    quizzesModel.quizzes.count == 0 ? quizzesModel.download() : nil
+                Toggle(isOn: $toggleAcertadas, label:{
+                    Text("Quizzes sin resolver")
+                })
+                .padding(20)
+                
+                if toggleAcertadas {
+                    noAcertadasView
+                }else{
+                    quizzesView
                 }
             }
         }
     }
-}
-
-/*struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        QuizzesListView()
+    
+    private var noAcertadasView: some View{
+        List{
+            ForEach(quizzesModel.arrayNoAcertadas){ qi in
+                NavigationLink(
+                    destination: AnswerView(quizItem: qi)
+                ){
+                    QuizView(quizItem: qi)
+                }
+            }
+        }
+        .navigationTitle("Quizzes")
+        .toolbar{
+                Text("Record: \(UserDefaults.standard.integer(forKey: kmykey))") //muestra el mayor número de acertados
+                Spacer()
+                Button(action: {
+                    quizzesModel.download()
+                    scoresModel.delete()
+                }) {
+                    Label("Reload", systemImage: "arrow.counterclockwise.circle")
+                }
+        }
+        .onAppear{
+            if quizzesModel.quizzes.count == 0 {
+                quizzesModel.download()
+            }
+        }
     }
-}*/
+    
+    private var quizzesView: some View{
+        List{
+            ForEach(quizzesModel.quizzes){ qi in
+                NavigationLink(
+                    destination: AnswerView(quizItem: qi)
+                ){
+                    QuizView(quizItem: qi)
+                }
+                    
+            }
+        }
+        .navigationTitle("Quizzes")
+        .toolbar{
+                Text("Record: \(UserDefaults.standard.integer(forKey: kmykey))") //muestra el mayor número de acertados -> usar persistencia
+                Spacer()
+                Button(action: {
+                    quizzesModel.download()
+                    scoresModel.delete()
+                }) {
+                    Label("Reload", systemImage: "arrow.counterclockwise.circle")
+                }
+        }
+        .onAppear{
+            if quizzesModel.quizzes.count == 0 {
+                quizzesModel.download()
+            }
+            
+        }
+        
+    }
+    
+    
+}

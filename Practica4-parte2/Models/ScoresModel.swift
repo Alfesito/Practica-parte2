@@ -8,7 +8,7 @@
 import Foundation
 
 class ScoresModel: ObservableObject {
-    
+        
     @Published private(set) var arrayAcertadas: Array <QuizItem> = []
     @Published private(set) var stringAcertadas: Set <String> = []
     @Published private(set) var acertadas: Set <Int> = []
@@ -22,9 +22,8 @@ class ScoresModel: ObservableObject {
         if(a1 == a2){
             acertadas.insert(quiz.id)
             stringAcertadas.insert(quiz.question)
-            
-            // Guarda en array acertadas los quizzes acertados
             arrayAcertadas.append(quiz)
+            
             if arrayAcertadas.count != acertadas.count {
                 arrayAcertadas.removeLast()
             }
@@ -43,4 +42,10 @@ class ScoresModel: ObservableObject {
         acertadas = []
         stringAcertadas = []
     }
+    
+    func deleteScore(){
+        UserDefaults.standard.removeObject(forKey: kmykey)
+        UserDefaults.standard.synchronize()
+    }
+
 }

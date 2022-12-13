@@ -10,6 +10,7 @@ import SwiftUI
 struct QuizView: View {
     
     var quizItem : QuizItem
+    
     var body: some View {
         VStack{
             HStack{

@@ -18,7 +18,6 @@ struct Practica4_parte1App: App {
             QuizzesListView()
                 .environmentObject(quizzesModel)
                 .environmentObject(scoresModel)
-
         }
     }
 }
