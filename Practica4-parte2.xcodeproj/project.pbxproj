@@ -146,9 +146,9 @@
 			isa = PBXGroup;
 			children = (
 				15214B2829317A7700B73541 /* QuizItem.swift */,
-				15214B2629317A7600B73541 /* quizzes.json */,
 				15214B2729317A7600B73541 /* QuizzesModel.swift */,
 				15214B2929317A7700B73541 /* ScoresModel.swift */,
+				15214B2629317A7600B73541 /* quizzes.json */,
 			);
 			path = Models;
 			sourceTree = "<group>";

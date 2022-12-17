@@ -14,7 +14,7 @@ struct AnswerView: View {
     
     @EnvironmentObject var scoresModel: ScoresModel
     @EnvironmentObject var quizzesModel: QuizzesModel
-
+    
     @State var answer: String = ""
     @State var showAlert = false
     @State private var animationAmount: CGFloat = 0
@@ -91,8 +91,8 @@ struct AnswerView: View {
                 Text("Score: \(scoresModel.acertadas.count)")
                 //Imagen del autor
                 authorImage
-                .frame(width: 50, height: 50)
-                .clipShape (Circle ())
+                    .frame(width: 50, height: 50)
+                    .clipShape (Circle ())
                 
             }
         }
@@ -155,7 +155,7 @@ struct AnswerView: View {
                     Text("Score: \(scoresModel.acertadas.count)")
                     //Imagen del autor
                     authorImage
-
+                    
                 }
             }
         }
@@ -166,7 +166,8 @@ struct AnswerView: View {
                 // if the image is valid
                 image
                     .resizable()
-                    .aspectRatio(contentMode: .fill)
+                    .scaledToFill()
+                    .aspectRatio(contentMode: .fit)
             } else if phase.error != nil { // 3
                 // some kind of error appears
                 Text("No image available")
@@ -182,12 +183,12 @@ struct AnswerView: View {
             .overlay (RoundedRectangle (cornerRadius: 20).stroke(lineWidth: 4))
             .padding(30)
             .rotationEffect(.degrees(rotationDegrees))
-                        .onTapGesture(count: 2) {
-                            withAnimation {
-                                self.rotationDegrees += 360
-                                answer = quizItem.answer
-                            }
-                        }
+            .onTapGesture(count: 2) {
+                withAnimation {
+                    self.rotationDegrees += 360
+                    answer = quizItem.answer
+                }
+            }
             .rotationEffect(.degrees(0))
             .animation(
                 Animation.linear(duration: 1)

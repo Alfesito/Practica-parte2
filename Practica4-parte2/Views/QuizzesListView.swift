@@ -13,6 +13,7 @@ struct QuizzesListView: View {
     @EnvironmentObject var scoresModel: ScoresModel
     private var kmykey = "MY_KEY"
     @State var toggleAcertadas = false
+    @State var showAlert = false
     
     var body: some View{
         NavigationStack{
@@ -31,6 +32,50 @@ struct QuizzesListView: View {
         }
     }
     
+    private var quizzesView: some View{
+        List{
+            ForEach(quizzesModel.quizzes){ qi in
+                NavigationLink(
+                    destination: AnswerView(quizItem: qi)
+                ){
+                    QuizView(quizItem: qi)
+                }
+                
+            }
+        }
+        .navigationTitle("Quizzes")
+        .toolbar{
+            Text("Record: \(UserDefaults.standard.integer(forKey: kmykey))") //muestra el mayor número de acertados -> usar persistencia
+            Spacer()
+            Button(action: {
+                quizzesModel.download()
+                //Task{ await quizzesModel.download_async1() }
+                scoresModel.delete()
+            }) {
+                Label("Reload", systemImage: "arrow.counterclockwise.circle")
+            }
+        }
+        .onAppear{
+            if quizzesModel.quizzes.count == 0 {
+                quizzesModel.download()
+            } 
+        }
+        .task {
+            if quizzesModel.quizzes.count == 0 {
+                //await quizzesModel.download_async1()
+            }
+        }
+        .onReceive(quizzesModel.$errorMsg) { msg in
+            showAlert = msg != nil
+        }
+        .alert(isPresented: $showAlert){
+            Alert(title: Text("ERROR"),
+                  message: Text(quizzesModel.errorMsg ?? ""),
+                  dismissButton: .default(Text("Cerrar"))
+            )
+        }
+    }
+    
     private var noAcertadasView: some View{
         List{
             ForEach(quizzesModel.arrayNoAcertadas){ qi in
@@ -43,52 +88,25 @@ struct QuizzesListView: View {
         }
         .navigationTitle("Quizzes")
         .toolbar{
-                Text("Record: \(UserDefaults.standard.integer(forKey: kmykey))") //muestra el mayor número de acertados
-                Spacer()
-                Button(action: {
-                    quizzesModel.download()
-                    scoresModel.delete()
-                }) {
-                    Label("Reload", systemImage: "arrow.counterclockwise.circle")
-                }
+            Text("Record: \(UserDefaults.standard.integer(forKey: kmykey))") //muestra el mayor número de acertados
+            Spacer()
+            Button(action: {
+                quizzesModel.download()
+                //Task{ await quizzesModel.download_async1() }
+                scoresModel.delete()
+            }) {
+                Label("Reload", systemImage: "arrow.counterclockwise.circle")
+            }
         }
         .onAppear{
             if quizzesModel.quizzes.count == 0 {
                 quizzesModel.download()
             }
         }
-    }
-    
-    private var quizzesView: some View{
-        List{
-            ForEach(quizzesModel.quizzes){ qi in
-                NavigationLink(
-                    destination: AnswerView(quizItem: qi)
-                ){
-                    QuizView(quizItem: qi)
-                }
-                    
-            }
-        }
-        .navigationTitle("Quizzes")
-        .toolbar{
-                Text("Record: \(UserDefaults.standard.integer(forKey: kmykey))") //muestra el mayor número de acertados -> usar persistencia
-                Spacer()
-                Button(action: {
-                    quizzesModel.download()
-                    scoresModel.delete()
-                }) {
-                    Label("Reload", systemImage: "arrow.counterclockwise.circle")
-                }
-        }
-        .onAppear{
+        .task {
             if quizzesModel.quizzes.count == 0 {
-                quizzesModel.download()
+                //await quizzesModel.download_async1()
             }
-            
         }
-        
     }
-    
-    
 }
