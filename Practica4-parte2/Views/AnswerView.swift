@@ -17,8 +17,9 @@ struct AnswerView: View {
     
     @State var answer: String = ""
     @State var showAlert = false
-    @State private var animationAmount: CGFloat = 0
     @State private var rotationDegrees = 0.0
+    @State private var starAnimation = 0.0
+    @State private var scale = false
     
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @Environment(\.verticalSizeClass) var verticalSizeClass
@@ -41,15 +42,15 @@ struct AnswerView: View {
                 //Boton de favoritos
                 Button(action: {
                     quizzesModel.favourites(quizItem: quizItem)
-                    self.animationAmount += 360
+                    starAnimation += 360
                 }){
                     Image(quizItem.favourite ? "star_yellow" : "star_grey")
                         .resizable()
                         .frame(width: 25, height: 25)
                         .scaledToFit()
+                        .rotationEffect(Angle(degrees: starAnimation))
+                        .animation(.easeInOut, value: starAnimation)
                 }
-                .rotationEffect(.degrees(animationAmount))
-                .animation(Animation.default)
             }
             
             TextField("Respuesta",
@@ -109,16 +110,19 @@ struct AnswerView: View {
                     //Pregunta
                     Text(quizItem.question)
                         .font(.system(size: 20, weight: .bold))
-                    
                     //Boton de favoritos
                     Button(action: {
-                        quizzesModel.favourites(quizItem: quizItem)
-                        self.animationAmount += 360
+                        withAnimation{
+                            quizzesModel.favourites(quizItem: quizItem)
+                            starAnimation += 360
+                        }
                     }){
                         Image(quizItem.favourite ? "star_yellow" : "star_grey")
                             .resizable()
                             .frame(width: 25, height: 25)
                             .scaledToFit()
+                            .rotationEffect(Angle(degrees: starAnimation))
+                            .transition(.slide)
                     }
                 }
                 
@@ -155,25 +159,24 @@ struct AnswerView: View {
                     Text("Score: \(scoresModel.acertadas.count)")
                     //Imagen del autor
                     authorImage
-                    
                 }
             }
         }
     }
     public var quizImage: some View {
-        AsyncImage(url: quizItem.attachment?.url){ phase in // 1
-            if let image = phase.image { // 2
+        AsyncImage(url: quizItem.attachment?.url){ phase in
+            if let image = phase.image {
                 // if the image is valid
                 image
                     .resizable()
                     .scaledToFill()
                     .aspectRatio(contentMode: .fit)
-            } else if phase.error != nil { // 3
+            } else if phase.error != nil {
                 // some kind of error appears
                 Text("No image available")
             } else {
                 //appears as placeholder image
-                Image(systemName: "photo.circle.fill") // 4
+                Image(systemName: "photo.circle.fill")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
             }
@@ -189,10 +192,10 @@ struct AnswerView: View {
                     answer = quizItem.answer
                 }
             }
-            .rotationEffect(.degrees(0))
-            .animation(
-                Animation.linear(duration: 1)
-            )
+            .animation(.linear(duration: 1), value: scale) //cuando cambia scale, se realiza la animación
+            .onAppear{
+                self.scale.toggle()
+            }
     }
     
     public var authorImage: some View {
@@ -232,4 +235,5 @@ struct AnswerView: View {
                 }
             }
     }
+    
 }

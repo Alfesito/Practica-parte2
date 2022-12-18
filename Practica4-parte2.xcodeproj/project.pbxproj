@@ -156,9 +156,9 @@
 		15214B2F29317AAE00B73541 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				15214B3129317AD400B73541 /* AnswerView.swift */,
-				15214B3229317AD400B73541 /* QuizView.swift */,
 				15214B3029317AD400B73541 /* QuizzesListView.swift */,
+				15214B3229317AD400B73541 /* QuizView.swift */,
+				15214B3129317AD400B73541 /* AnswerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";

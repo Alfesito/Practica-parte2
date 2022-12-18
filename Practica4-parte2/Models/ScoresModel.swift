@@ -18,7 +18,6 @@ class ScoresModel: ObservableObject {
     func check(respuesta: String, quiz: QuizItem){
         let a1 = respuesta.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
         let a2 = quiz.answer.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
-        
         if(a1 == a2){
             acertadas.insert(quiz.id)
             stringAcertadas.insert(quiz.question)
@@ -37,15 +36,15 @@ class ScoresModel: ObservableObject {
         }
     }
     
+    func deleteScore(){
+        UserDefaults.standard.removeObject(forKey: kmykey)
+        UserDefaults.standard.synchronize()
+    }
+    
     func delete(){
         arrayAcertadas = []
         acertadas = []
         stringAcertadas = []
-    }
-    
-    func deleteScore(){
-        UserDefaults.standard.removeObject(forKey: kmykey)
-        UserDefaults.standard.synchronize()
     }
 
 }

@@ -45,20 +45,23 @@ struct QuizzesListView: View {
         }
         .navigationTitle("Quizzes")
         .toolbar{
-            Text("Record: \(UserDefaults.standard.integer(forKey: kmykey))") //muestra el mayor número de acertados -> usar persistencia
-            Spacer()
-            Button(action: {
-                quizzesModel.download()
-                //Task{ await quizzesModel.download_async1() }
-                scoresModel.delete()
-            }) {
-                Label("Reload", systemImage: "arrow.counterclockwise.circle")
+            ToolbarItem(placement: .navigationBarLeading){
+                Text("Record: \(UserDefaults.standard.integer(forKey: kmykey))")
+            }
+            ToolbarItem(placement: .navigationBarTrailing){
+                Button(action: {
+                    quizzesModel.download()
+                    //Task{ await quizzesModel.download_async1() }
+                    scoresModel.delete()
+                }) {
+                    Label("Reload", systemImage: "arrow.counterclockwise.circle")
+                }
             }
         }
         .onAppear{
             if quizzesModel.quizzes.count == 0 {
                 quizzesModel.download()
-            } 
+            }
         }
         .task {
             if quizzesModel.quizzes.count == 0 {
@@ -88,14 +91,17 @@ struct QuizzesListView: View {
         }
         .navigationTitle("Quizzes")
         .toolbar{
-            Text("Record: \(UserDefaults.standard.integer(forKey: kmykey))") //muestra el mayor número de acertados
-            Spacer()
-            Button(action: {
-                quizzesModel.download()
-                //Task{ await quizzesModel.download_async1() }
-                scoresModel.delete()
-            }) {
-                Label("Reload", systemImage: "arrow.counterclockwise.circle")
+            ToolbarItem(placement: .navigationBarLeading){
+                Text("Record: \(UserDefaults.standard.integer(forKey: kmykey))")
+            }
+            ToolbarItem(placement: .navigationBarTrailing){
+                Button(action: {
+                    quizzesModel.download()
+                    //Task{ await quizzesModel.download_async1() }
+                    scoresModel.delete()
+                }) {
+                    Label("Reload", systemImage: "arrow.counterclockwise.circle")
+                }
             }
         }
         .onAppear{
