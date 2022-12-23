@@ -224,7 +224,9 @@ class QuizzesModel: ObservableObject {
             }
             DispatchQueue.main.async {
                 self.quizzes[index].favourite.toggle()
-                self.arrayNoAcertadas[index].favourite.toggle()
+                if(index < self.arrayNoAcertadas.count){
+                    self.arrayNoAcertadas[index].favourite.toggle()
+                }
             }
         }.resume()
     }
